@@ -1,0 +1,9 @@
+module.exports.head = require('./head.hbs');
+module.exports.body = require('./body.hbs');
+module.exports.nav = require('./nav.hbs');
+module.exports.signup = require('./signup.hbs');
+module.exports.login = require('./login.hbs');
+module.exports.error = require('./error.hbs');
+module.exports.home = require('./home.hbs');
+module.exports.user = require('./user.hbs');
+module.exports.remove = require('./remove.hbs');

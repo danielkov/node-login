@@ -1,0 +1,7 @@
+{{#if model.isLoggedIn}}
+<li><a href="/user">{{ model.username }}</a></li>
+<li><a href="/logout">Log Out</a></li>
+{{else}}
+<li><a href="/login">Log In</a></li>
+<li><a href="/signup">Sign Up</a></li>
+{{/if}}

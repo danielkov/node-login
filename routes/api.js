@@ -7,7 +7,7 @@ const express = require('express');
       csrf = require('../middleware/csrf'),
       userAgent = require('express-useragent');
 
-api.use(bodyParser.urlencoded({extended:false}));
+api.use(bodyParser.urlencoded({extended:true}));
 api.use(bodyParser.json());
 api.use(userAgent.express());
 
@@ -19,26 +19,28 @@ api.get('/', (req, res) => {
 })
 
 // Send details to sign up a new user.
-api.post('/signup', (req, res) => {
+api.post('/user', (req, res) => {
   let errors = [];
 
-  if (!req.body.username) {
+  if (!req.body.username || req.body.username == 'undefined') {
     errors.push('Please provide a username.')
   }
 
-  if (!req.body.password) {
+  if (!req.body.password || req.body.password == 'undefined') {
     errors.push('Please provide a password.')
   }
 
-  if (!req.body.email) {
+  if (!req.body.email || req.body.password == 'undefined') {
     errors.push('Please provide a valid e-mail address.')
   }
 
   if (errors.length > 0) {
     res.json({
       success: false,
-      message: errors
+      message: errors,
+      body: req.body
     })
+    return;
   }
 
   let username = req.body.username,
@@ -61,6 +63,7 @@ api.post('/signup', (req, res) => {
           success: false,
           message: errors
         })
+        return;
       }
     }
     else {
@@ -82,7 +85,7 @@ api.post('/signup', (req, res) => {
         else {
           res.json({
             success: false,
-            message: 'Sign up unsuccessful. Username or e-mail my already be in use.'
+            message: 'Something went wrong, while signing you up.'
           })
         }
       })
@@ -99,12 +102,13 @@ api.get('/user', csrf, (req, res) => {
     success: true,
     message: 'Successfully retrieved user.',
     username: user.username,
+    email: user.email,
     os: authedOS
   })
 })
 
 // Post user information and get back a valid CSRF token as a response.
-api.post('/user', (req, res) => {
+api.post('/auth', (req, res) => {
 
   let errors = [];
 
@@ -121,6 +125,7 @@ api.post('/user', (req, res) => {
       success: false,
       message: errors
     })
+    return;
   }
 
   let username = req.body.username,
@@ -157,6 +162,8 @@ api.post('/user', (req, res) => {
             res.json({
               success: true,
               message: 'Successfully logged in.',
+              username: user.username,
+              email: user.email,
               token: token
             })
           })
